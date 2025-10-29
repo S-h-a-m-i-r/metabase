@@ -27,17 +27,9 @@ This guide will help you deploy your Metabase instance to Render.com.
    - **Root Directory**: . (or leave empty)
    - **Plan**: Starter ($7/month) or Free tier if available
    
-4. **Add Persistent Disk** (Important!)
-   - In the service settings, go to "Disks"
-   - Click "Link Existing Disk" or "Create Disk"
-   - Name: `metabase-disk`
-   - Mount Path: `/metabase-data`
-   - Size: 1GB (minimum, increase if needed)
-
-5. **Environment Variables**
-   - Go to "Environment" tab
-   - Add: `MB_DB_FILE` = `/metabase-data/metabase.db`
-   - Optionally add: `MB_JETTY_PORT` = `10000` (Render uses port 10000 by default)
+4. **Environment Variables** (Already configured in render.yaml)
+   - The `render.yaml` file already includes all necessary environment variables
+   - If you need to override, go to "Environment" tab in Render dashboard
 
 6. **Deploy**
    - Click "Create Web Service"
@@ -66,11 +58,9 @@ This guide will help you deploy your Metabase instance to Render.com.
 ⚠️ **Free Tier Limitations:**
 - Services on free tier spin down after 15 minutes of inactivity
 - First request after spin-down takes 30-60 seconds to wake up
-- Consider upgrading to paid plan for production use
-
-⚠️ **Database Persistence:**
-- Your Metabase data is stored on the persistent disk at `/metabase-data`
-- This ensures your data persists across deployments
+- **Persistent disks are NOT available on free tier**
+- Your Metabase database will be stored in `/tmp` which means **data will be lost on service restart**
+- Consider upgrading to paid plan ($7/month) for persistent storage, or use external database (see below)
 
 ⚠️ **Port Configuration:**
 - Render uses port 10000 for web services
@@ -94,8 +84,9 @@ This guide will help you deploy your Metabase instance to Render.com.
 ## Troubleshooting
 
 - **Service won't start**: Check logs in Render dashboard
-- **Database not persisting**: Verify disk is mounted at `/metabase-data`
-- **Port errors**: Ensure `MB_JETTY_PORT=10000` is set
+- **Port binding errors**: Fixed by setting `MB_JETTY_PORT=10000` and `MB_JETTY_HOST=0.0.0.0` in render.yaml
+- **OutOfMemoryError**: Fixed by setting `JAVA_TOOL_OPTIONS=-Xmx384m -Xms128m` to limit Java memory usage
+- **Database not persisting**: On free tier, data is stored in `/tmp` and will be lost on restart. Use external database for persistence.
 - **Slow first load**: Normal on free tier due to spin-down
 
 ## Alternative: Using PostgreSQL

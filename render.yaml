@@ -4,14 +4,16 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter
+    plan: free
     envVars:
-      - key: MB_DB_FILE
-        value: /metabase-data/metabase.db
+      - key: PORT
+        value: 10000
       - key: MB_JETTY_PORT
         value: 10000
-    disk:
-      name: metabase-disk
-      mountPath: /metabase-data
-      sizeGB: 1
+      - key: MB_JETTY_HOST
+        value: 0.0.0.0
+      - key: MB_DB_FILE
+        value: /tmp/metabase.db
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xmx384m -Xms128m
 
