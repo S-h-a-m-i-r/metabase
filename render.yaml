@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: metabase
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    envVars:
+      - key: MB_DB_FILE
+        value: /metabase-data/metabase.db
+      - key: MB_JETTY_PORT
+        value: 10000
+    disk:
+      name: metabase-disk
+      mountPath: /metabase-data
+      sizeGB: 1
+
