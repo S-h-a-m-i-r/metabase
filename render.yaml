@@ -5,6 +5,7 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     plan: free
+    port: 10000
     envVars:
       - key: PORT
         value: 10000
