@@ -6,13 +6,8 @@ services:
     dockerContext: .
     plan: free
     port: 10000
+    healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 10000
-      - key: MB_JETTY_PORT
-        value: 10000
-      - key: MB_JETTY_HOST
-        value: 0.0.0.0
       - key: MB_DB_FILE
         value: /tmp/metabase.db
       - key: JAVA_TOOL_OPTIONS
